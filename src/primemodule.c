@@ -17,6 +17,7 @@ static PyObject * gensafeprime_generate(PyObject *self, PyObject *args) {
 	PyObject * result; // Return value
 	int bitlength; // Desired bitlength of prime
 	char * r; // temporary representation as string
+	int err;
 	BIGNUM * n; // OpenSSL bignum object holding the prime
 
 	if (!PyArg_ParseTuple(args, "i", &bitlength)) {
@@ -24,9 +25,12 @@ static PyObject * gensafeprime_generate(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 
+	n = BN_new();
+
 	// Generate the prime
-	n = BN_generate_prime(NULL, bitlength, 1, NULL, NULL, NULL, NULL);
-	if (n == NULL) {
+	err = BN_generate_prime_ex(n, bitlength, 1, NULL, NULL, NULL);
+	if (err == 0) {
+		BN_clear_free(n);
 		PyErr_SetString(PyExc_RuntimeError, "call to BN_generate_prime failed");
 		return NULL;
 	}

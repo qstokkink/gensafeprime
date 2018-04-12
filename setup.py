@@ -1,4 +1,4 @@
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 setup (
 	name = 'gensafeprime', 
@@ -23,4 +23,9 @@ setup (
 		'Operating System :: Microsoft :: Windows',
 		'Operating System :: Unix',
 		'Intended Audience :: Developers'],
-	ext_modules = [Extension('gensafeprime',sources = ['src/primemodule.c'],libraries = ['ssl','crypto'])])
+	ext_modules = [
+	Extension('gensafeprime',
+			  include_dirs = ['E:/OpenSSL/include'],
+			  library_dirs=['E:/OpenSSL/lib'],
+			  sources = ['src/primemodule.c'],
+			  libraries = ['libssl','libcrypto'])])
